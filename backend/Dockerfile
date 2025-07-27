@@ -1,23 +1,38 @@
-# Dockerfile pour l'application FastAPI (backend)
+# Dockerfile for the FastAPI application (backend)
 
-# Utilisation d'une image Python
-FROM python:3.10-slim-buster
+# Use a Python base image
+FROM python:3.11-slim
 
-# Définition du répertoire de travail dans le conteneur
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copie des fichiers de dépendances pour les installer
+# IMPORTANT: Install necessary system dependencies for mysqlclient
+# apt-get update refreshes the package list
+# apt-get install -y installs the packages
+# build-essential: for compilation tools like gcc
+# pkg-config: to find library configurations
+# libmysqlclient-dev: development headers for the MySQL client library
+# && rm -rf /var/lib/apt/lists/*: Cleans up the APT cache to reduce image size
+RUN apt-get update && \
+    apt-get install -y \
+        build-essential \
+        pkg-config \
+        libmariadb-dev-compat \
+        libmariadb-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy the requirements file to install Python dependencies
 COPY requirements.txt .
 
-# Installation des dépendances
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copie du reste des fichiers de l'application
+# Copy the rest of the application files
 COPY . .
 
-# Exposition du port par défaut de FastAPI (Uvicorn)
+# Expose the default port for FastAPI (Uvicorn)
 EXPOSE 8000
 
-# Commande pour démarrer l'application Uvicorn
-# --host 0.0.0.0 est nécessaire pour que l'app soit accessible depuis l'extérieur du conteneur
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Command to start the Uvicorn application
+# --host 0.0.0.0 is necessary for the app to be accessible from outside the container
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
