@@ -6,14 +6,14 @@ on:
   push:
     branches:
       - main
-      - dev
+      - develop
       - 'feature/**'
     paths:
       - 'frontend/**' # Only run if changes are within the frontend directory
   pull_request:
     branches:
       - main
-      - dev
+      - develop
     paths:
       - 'frontend/**'
 
