@@ -1,0 +1,65 @@
+# .github/workflows/backend_ci.yml
+
+name: Backend CI (FastAPI)
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - 'feature/**' # Triggers for branches like feature/my-new-feature
+    paths:
+      - 'backend/**' # Only run if changes are within the backend directory
+  pull_request:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'backend/**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest # Using a fresh Ubuntu VM for each job
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4 # Action to checkout your repository
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt # Install dependencies from backend/
+
+      # Placeholder for running backend tests
+      # You'll need to create a 'tests' directory in your backend/app
+      # and add a test runner like pytest.
+      - name: Run backend tests
+        run: |
+          # cd backend # Make sure you're in the right directory if tests are relative
+          # pytest # Example: if using pytest
+          echo "Backend tests would run here."
+        # continue-on-error: true # Consider this if you want subsequent steps to run even if tests fail
+
+      - name: Build Docker image for Backend
+        run: |
+          docker build -t olabophoto-backend:latest ./backend
+          echo "Docker image built successfully for backend."
+
+      # Optional: Add security scanning for Python dependencies
+      # - name: Run Bandit (Security Linter)
+      #   run: |
+      #     pip install bandit
+      #     bandit -r backend -ll -f json -o bandit_report.json
+      #   continue-on-error: true # Don't fail the build just for warnings
+
+      # Optional: Upload artifacts (e.g., test reports, build logs)
+      # - name: Upload test report
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: backend-test-report
+      #     path: backend/test-report.xml # Adjust path to your test report
