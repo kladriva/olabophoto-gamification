@@ -4,7 +4,7 @@ node_modules
 /.next/*
 
 out/
-
+frontend/.next/*
 /frontend/.next/*
 /frontend/node_modules/
 /frontend/.next/cache/
