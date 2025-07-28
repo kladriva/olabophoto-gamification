@@ -4,10 +4,10 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
       # L'URL de l'API doit pointer vers le nom du service Docker du backend
-      - NEXT_PUBLIC_API_URL=http://backend:8000
+      - NEXT_PUBLIC_API_URL=http://backend:8010
     depends_on:
       - backend
     # Monter le dossier courant du frontend pour le hot-reloading en dev
@@ -17,7 +17,7 @@ services:
   backend:
     build: ./backend
     ports:
-      - "8000:8000"
+      - "8010:8000"
     environment:
       # Noms d'utilisateur/mot de passe/bdd dev (à remplacer par des variables d'env sécurisées en prod)
       - DATABASE_URL=mysql+mysqlconnector://user:password@db:3306/olabophoto_db
