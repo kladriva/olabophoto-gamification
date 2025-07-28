@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Ajoutez vos configurations Next.js ici
+    allowedNextDevOrigins: ['http://olabophotodevine.kladriva.fr'],
+    // Ajoutez vos configurations Next.js ici
+
 };
 
 module.exports = nextConfig;

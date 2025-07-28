@@ -13,14 +13,14 @@ load_dotenv()
 
 app = FastAPI(
     title="OlaboPhoto API",
-    description="API pour le jeu de gamification OlaboPhoto - Devinez le contexte de la photo",
+    description="API pour le jeu de gamification OlaboPhoto - Devinez le contexte de la photo - !",
     version="0.1.0"
 )
 
 # Configuration CORS pour permettre au frontend de communiquer avec le backend
 origins = [
-    "http://localhost:3000", # L'URL de ton frontend Next.js en dev
-    "http://frontend:3000",  # Nom du service frontend dans Docker Compose
+    "http://localhost:3001", # L'URL de ton frontend Next.js en dev
+    "http://frontend:3001",  # Nom du service frontend dans Docker Compose
 ]
 
 app.add_middleware(

@@ -1,0 +1,4 @@
+frontend/.next/*
+/frontend/.next/BUILD_ID
+/frontend/.next/trace/
+/frontend/.next/BUILD_ID
