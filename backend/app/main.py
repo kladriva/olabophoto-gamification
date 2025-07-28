@@ -13,7 +13,7 @@ load_dotenv()
 
 app = FastAPI(
     title="OlaboPhoto API",
-    description="API pour le jeu de gamification OlaboPhoto - Devinez le contexte de la photo !",
+    description="API pour le jeu de gamification OlaboPhoto - Devinez le contexte de la photo - !",
     version="0.1.0"
 )
 
