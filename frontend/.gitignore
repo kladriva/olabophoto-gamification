@@ -1,3 +1,15 @@
 /node_modules/
 node_modules
-.next/*
+.next/
+/.next/*
+
+out/
+
+/frontend/.next/*
+/frontend/node_modules/
+/frontend/.next/cache/
+/frontend/.next/server/
+/frontend/.next/static/
+/frontend/.next/BUILD_ID
+/frontend/.next/trace/
+/frontend/.next/BUILD_ID
