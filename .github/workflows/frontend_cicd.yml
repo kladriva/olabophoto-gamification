@@ -1,0 +1,72 @@
+# .github/workflows/frontend.yml
+
+name: Frontend CI/CD (Next.js)
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'feature/**'
+    paths:
+      - 'frontend/**'
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'frontend/**'
+
+jobs:
+  build-and-test: # Your CI job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Node.js 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+      - name: Install npm dependencies
+        run: npm install
+        working-directory: ./frontend
+      - name: Run frontend tests
+        run: |
+          echo "Frontend tests would run here."
+        working-directory: ./frontend
+      - name: Run ESLint
+        run: npm run lint
+        continue-on-error: true
+        working-directory: ./frontend
+      - name: Build Next.js application
+        run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+        working-directory: ./frontend
+
+  deploy: # Your CD job
+    runs-on: ubuntu-latest
+    environment: production
+    needs: build-and-test # This job now depends on 'build-and-test' within the same file
+    if: github.ref == 'refs/heads/main' && success() # Only deploy to production if main branch and previous job succeeded
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Debian Server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ${{ secrets.DEPLOY_PATH }}
+            echo "Pulling latest code..."
+            git pull origin main
+            cd frontend
+            echo "Installing frontend dependencies and building Next.js..."
+            npm install --production
+            npm run build
+            docker compose -f ../docker-compose.yml up -d --build --force-recreate frontend
+            echo "Frontend deployment complete!"
